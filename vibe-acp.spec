@@ -14,6 +14,7 @@ a = Analysis(
         # This is necessary because tools are dynamically called in vibe, meaning there is no static reference to those files
         ('vibe/core/tools/builtins/*.py', 'vibe/core/tools/builtins'),
         ('vibe/acp/tools/builtins/*.py', 'vibe/acp/tools/builtins'),
+        ('vibe/certs/*', 'vibe/certs'),
     ],
     hiddenimports=[],
     hookspath=[],

@@ -137,12 +137,16 @@ class Backend(StrEnum):
     GENERIC = auto()
 
 
+DEFAULT_CA_BUNDLE = Path(__file__).parent.parent / "certs" / "ca.pem"
+
+
 class ProviderConfig(BaseModel):
     name: str
     api_base: str
     api_key_env_var: str = ""
     api_style: str = "openai"
     backend: Backend = Backend.GENERIC
+    ssl_verify: bool | str = str(DEFAULT_CA_BUNDLE) if DEFAULT_CA_BUNDLE.exists() else True
 
 
 class _MCPBase(BaseModel):
@@ -247,29 +251,17 @@ class ModelConfig(BaseModel):
 DEFAULT_PROVIDERS = [
     ProviderConfig(
         name="devstral2",
-        api_base="http://localhost:8000/v1",
+        api_base="https://webui.dev.cora.sern.mil/api",
         api_key_env_var="CORA_API_KEY",
         backend=Backend.GENERIC,
-    ),
-    ProviderConfig(
-        name="llamacpp",
-        api_base="http://127.0.0.1:8080/v1",
-        api_key_env_var="",  # NOTE: if you wish to use --api-key in llama-server, change this value
     ),
 ]
 
 DEFAULT_MODELS = [
     ModelConfig(
-        name="devstral-2",
+        name="devstral2",
         provider="devstral2",
-        alias="devstral-2",
-        input_price=0.0,
-        output_price=0.0,
-    ),
-    ModelConfig(
-        name="devstral",
-        provider="llamacpp",
-        alias="local",
+        alias="devstral2",
         input_price=0.0,
         output_price=0.0,
     ),
@@ -277,7 +269,7 @@ DEFAULT_MODELS = [
 
 
 class VibeConfig(BaseSettings):
-    active_model: str = "devstral-2"
+    active_model: str = "devstral2"
     vim_keybindings: bool = False
     disable_welcome_banner_animation: bool = False
     displayed_workdir: str = ""

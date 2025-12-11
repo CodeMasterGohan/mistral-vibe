@@ -16,9 +16,9 @@ from vibe.core.config import GLOBAL_ENV_FILE, VibeConfig
 from vibe.setup.onboarding.base import OnboardingScreen
 
 PROVIDER_HELP = {
-    "devstral2": ("#", "Internal Server Admin")
+    "devstral2": ("#", "Bottom left of the Cora-Web Dashboard"),
 }
-CONFIG_DOCS_URL = "#"
+CONFIG_DOCS_URL = "https://webui.dev.cora.sern.mil/"
 
 
 def _save_api_key_to_env_file(env_key: str, api_key: str) -> None:
@@ -45,7 +45,7 @@ class ApiKeyScreen(OnboardingScreen):
             return
 
         help_url, help_name = PROVIDER_HELP[self.provider.name]
-        yield Static(f"Grab your {provider_name} API key from the {help_name}:")
+        yield Static(f"Grab your Cora-Web API key from the {help_name}:")
         yield Center(
             Horizontal(
                 Static("→ ", classes="link-chevron"),

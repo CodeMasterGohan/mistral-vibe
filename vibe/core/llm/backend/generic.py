@@ -141,11 +141,11 @@ class OpenAIAdapter(APIAdapter):
                 message = LLMMessage.model_validate(data["choices"][0]["delta"])
             else:
                 raise ValueError("Invalid response data")
-            finish_reason = data["choices"][0]["finish_reason"]
+            finish_reason = data["choices"][0].get("finish_reason")
 
         elif "message" in data:
             message = LLMMessage.model_validate(data["message"])
-            finish_reason = data["finish_reason"]
+            finish_reason = data.get("finish_reason")
         elif "delta" in data:
             message = LLMMessage.model_validate(data["delta"])
             finish_reason = None
@@ -185,6 +185,7 @@ class GenericBackend:
             self._client = httpx.AsyncClient(
                 timeout=httpx.Timeout(self._timeout),
                 limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
+                verify=self._provider.ssl_verify,
             )
         return self
 
@@ -203,6 +204,7 @@ class GenericBackend:
             self._client = httpx.AsyncClient(
                 timeout=httpx.Timeout(self._timeout),
                 limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
+                verify=self._provider.ssl_verify,
             )
             self._owns_client = True
         return self._client
