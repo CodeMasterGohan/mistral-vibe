@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Generator
 from unittest.mock import patch
 
 from acp import AgentSideConnection, NewSessionRequest, SetSessionModelRequest
@@ -29,7 +30,7 @@ def backend() -> FakeBackend:
 
 
 @pytest.fixture
-def acp_agent(backend: FakeBackend) -> VibeAcpAgent:
+def acp_agent(backend: FakeBackend) -> Generator[VibeAcpAgent, None, None]:
     config = VibeConfig(
         active_model="devstral-latest",
         models=[
@@ -61,17 +62,24 @@ def acp_agent(backend: FakeBackend) -> VibeAcpAgent:
             except ValueError:
                 pass
 
-    patch("vibe.acp.acp_agent.VibeAgent", side_effect=PatchedAgent).start()
+    with patch("vibe.core.config.TomlFileSettingsSource") as MockToml, \
+         patch("vibe.acp.acp_agent.VibeAgent", side_effect=PatchedAgent):
 
-    vibe_acp_agent: VibeAcpAgent | None = None
+        mock_instance = MockToml.return_value
+        mock_instance.toml_data = config.model_dump(mode="json", exclude_none=True)
 
-    def _create_agent(connection: AgentSideConnection) -> VibeAcpAgent:
-        nonlocal vibe_acp_agent
-        vibe_acp_agent = VibeAcpAgent(connection)
-        return vibe_acp_agent
+        # Ensure the config is available in the in-memory settings for reloads
+        VibeConfig.dump_config(config.model_dump(mode="json", exclude_none=True))
 
-    FakeAgentSideConnection(_create_agent)
-    return vibe_acp_agent  # pyright: ignore[reportReturnType]
+        vibe_acp_agent: VibeAcpAgent | None = None
+
+        def _create_agent(connection: AgentSideConnection) -> VibeAcpAgent:
+            nonlocal vibe_acp_agent
+            vibe_acp_agent = VibeAcpAgent(connection)
+            return vibe_acp_agent
+
+        FakeAgentSideConnection(_create_agent)
+        yield vibe_acp_agent  # pyright: ignore[reportReturnType]
 
 
 class TestACPSetModel:

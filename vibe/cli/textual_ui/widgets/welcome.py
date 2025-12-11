@@ -92,9 +92,7 @@ class WelcomeBanner(Static):
         self._initialize_static_line_suffixes()
 
     def _initialize_static_line_suffixes(self) -> None:
-        self._static_line1_suffix = (
-            f"{self.LOGO_TEXT_GAP}[b]Cora v{__version__}[/]"
-        )
+        self._static_line1_suffix = f"{self.LOGO_TEXT_GAP}[b]Cora v{__version__}[/]"
         self._static_line2_suffix = (
             f"{self.LOGO_TEXT_GAP}[dim]{self.config.active_model}[/]"
         )

@@ -116,7 +116,8 @@ def is_dangerous_directory(path: Path | str = ".") -> tuple[bool, str]:
 
     home_dir = Path.home()
 
-    dangerous_paths = {
+    # Exact match required (safe to work in subdirectories)
+    user_protected_paths = {
         home_dir: "home directory",
         home_dir / "Documents": "Documents folder",
         home_dir / "Desktop": "Desktop folder",
@@ -125,19 +126,48 @@ def is_dangerous_directory(path: Path | str = ".") -> tuple[bool, str]:
         home_dir / "Movies": "Movies folder",
         home_dir / "Music": "Music folder",
         home_dir / "Library": "Library folder",
+    }
+
+    # Recursive match (dangerous to work in ANY subdirectory)
+    system_protected_paths = {
         Path("/Applications"): "Applications folder",
         Path("/System"): "System folder",
         Path("/Library"): "System Library folder",
         Path("/usr"): "System usr folder",
         Path("/private"): "System private folder",
+        Path("/bin"): "System bin folder",
+        Path("/sbin"): "System sbin folder",
+        Path("/etc"): "System configuration folder",
+        Path("/var"): "System var folder",
+        Path("/boot"): "Boot folder",
+        Path("/root"): "Root home folder",
+        Path("/dev"): "Device folder",
+        Path("/proc"): "Process information folder",
+        Path("/sys"): "System information folder",
+        Path("/lib"): "System library folder",
+        Path("/lib64"): "System 64-bit library folder",
     }
 
-    for dangerous_path, description in dangerous_paths.items():
+    for protected_path, description in user_protected_paths.items():
         try:
-            if path == dangerous_path:
+            if path == protected_path:
                 return True, f"You are in the {description}"
         except (OSError, ValueError):
             continue
+
+    for protected_path, description in system_protected_paths.items():
+        try:
+            # Try to resolve protected path to handle symlinks (like /bin -> /usr/bin)
+            try:
+                resolved_protected = protected_path.resolve()
+            except (OSError, ValueError, FileNotFoundError):
+                resolved_protected = protected_path
+
+            if path == resolved_protected or path.is_relative_to(resolved_protected):
+                return True, f"You are in the {description}"
+        except (OSError, ValueError):
+            continue
+
     return False, ""
 
 

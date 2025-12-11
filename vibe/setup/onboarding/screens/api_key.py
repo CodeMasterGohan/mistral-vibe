@@ -15,9 +15,7 @@ from vibe.cli.clipboard import copy_selection_to_clipboard
 from vibe.core.config import GLOBAL_ENV_FILE, VibeConfig
 from vibe.setup.onboarding.base import OnboardingScreen
 
-PROVIDER_HELP = {
-    "devstral2": ("#", "Internal Server Admin")
-}
+PROVIDER_HELP = {"devstral2": ("#", "Internal Server Admin")}
 CONFIG_DOCS_URL = "#"
 
 

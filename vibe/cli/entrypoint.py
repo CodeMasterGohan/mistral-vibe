@@ -23,7 +23,9 @@ from vibe.setup.onboarding import run_onboarding
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the Cora (402nd SWEG) interactive CLI")
+    parser = argparse.ArgumentParser(
+        description="Run the Cora (402nd SWEG) interactive CLI"
+    )
     parser.add_argument(
         "initial_prompt",
         nargs="?",

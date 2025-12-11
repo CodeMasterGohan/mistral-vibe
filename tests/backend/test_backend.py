@@ -36,10 +36,7 @@ class TestBackend:
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "base_url,json_response,result_data",
-        [
-            *FIREWORKS_SIMPLE_CONVERSATION_PARAMS,
-            *FIREWORKS_TOOL_CONVERSATION_PARAMS,
-        ],
+        [*FIREWORKS_SIMPLE_CONVERSATION_PARAMS, *FIREWORKS_TOOL_CONVERSATION_PARAMS],
     )
     async def test_backend_complete(
         self, base_url: Url, json_response: JsonResponse, result_data: ResultData
@@ -73,9 +70,7 @@ class TestBackend:
             assert result.message.content == result_data["message"]
             assert result.finish_reason == result_data["finish_reason"]
             assert result.usage is not None
-            assert (
-                result.usage.prompt_tokens == result_data["usage"]["prompt_tokens"]
-            )
+            assert result.usage.prompt_tokens == result_data["usage"]["prompt_tokens"]
             assert (
                 result.usage.completion_tokens
                 == result_data["usage"]["completion_tokens"]
@@ -86,9 +81,7 @@ class TestBackend:
 
             assert len(result.message.tool_calls) == len(result_data["tool_calls"])
             for i, tool_call in enumerate[ToolCall](result.message.tool_calls):
-                assert (
-                    tool_call.function.name == result_data["tool_calls"][i]["name"]
-                )
+                assert tool_call.function.name == result_data["tool_calls"][i]["name"]
                 assert (
                     tool_call.function.arguments
                     == result_data["tool_calls"][i]["arguments"]
@@ -125,9 +118,7 @@ class TestBackend:
                 name="model_name", provider="provider_name", alias="model_alias"
             )
 
-            messages = [
-                LLMMessage(role=Role.user, content="List files in current dir")
-            ]
+            messages = [LLMMessage(role=Role.user, content="List files in current dir")]
 
             results: list[LLMChunk] = []
             async for result in backend.complete_streaming(
@@ -166,9 +157,7 @@ class TestBackend:
                         tool_call.function.arguments
                         == expected_result["tool_calls"][i]["arguments"]
                     )
-                    assert (
-                        tool_call.index == expected_result["tool_calls"][i]["index"]
-                    )
+                    assert tool_call.index == expected_result["tool_calls"][i]["index"]
 
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
