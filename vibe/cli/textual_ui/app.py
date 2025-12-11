@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 from enum import StrEnum, auto
-import os
 import subprocess
 from typing import Any, ClassVar, assert_never
 
@@ -11,7 +10,7 @@ from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, VerticalScroll
 from textual.events import MouseUp
 from textual.widget import Widget
-from textual.widgets import Static
+from textual.widgets import Footer, Static
 
 from vibe.cli.clipboard import copy_selection_to_clipboard
 from vibe.cli.commands import CommandRegistry
@@ -66,11 +65,11 @@ class VibeApp(App):
     CSS_PATH = "app.tcss"
 
     BINDINGS: ClassVar[list[BindingType]] = [
-        Binding("ctrl+c", "force_quit", "Quit", show=False),
-        Binding("escape", "interrupt", "Interrupt", show=False, priority=True),
-        Binding("ctrl+o", "toggle_tool", "Toggle Tool", show=False),
-        Binding("ctrl+t", "toggle_todo", "Toggle Todo", show=False),
-        Binding("shift+tab", "cycle_mode", "Cycle Mode", show=False, priority=True),
+        Binding("ctrl+c", "force_quit", "Quit", show=True),
+        Binding("escape", "interrupt", "Interrupt", show=True, priority=True),
+        Binding("ctrl+o", "toggle_tool", "Tools", show=True),
+        Binding("ctrl+t", "toggle_todo", "Todo", show=True),
+        Binding("shift+tab", "cycle_mode", "Auto-Approve", show=True, priority=True),
     ]
 
     def __init__(
@@ -151,6 +150,8 @@ class VibeApp(App):
             )
             yield Static(id="spacer")
             yield ContextProgress()
+
+        yield Footer()
 
     async def on_mount(self) -> None:
         self.event_handler = EventHandler(
