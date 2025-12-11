@@ -35,7 +35,6 @@ from vibe.cli.textual_ui.widgets.path_display import PathDisplay
 from vibe.cli.textual_ui.widgets.tools import ToolCallMessage, ToolResultMessage
 from vibe.cli.textual_ui.widgets.welcome import WelcomeBanner
 from vibe.cli.update_notifier import (
-    GitHubVersionUpdateGateway,
     VersionUpdate,
     VersionUpdateError,
     is_version_update_available,
@@ -1084,9 +1083,8 @@ def run_textual_ui(
     loaded_messages: list[LLMMessage] | None = None,
     session_info: ResumeSessionInfo | None = None,
 ) -> None:
-    update_notifier = GitHubVersionUpdateGateway(
-        owner="mistralai", repository="mistral-vibe", token=os.getenv("GITHUB_TOKEN")
-    )
+    # Update notifier disabled for Cora
+    update_notifier = None
     app = VibeApp(
         config=config,
         auto_approve=auto_approve,

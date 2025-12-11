@@ -16,11 +16,9 @@ from vibe.core.config import GLOBAL_ENV_FILE, VibeConfig
 from vibe.setup.onboarding.base import OnboardingScreen
 
 PROVIDER_HELP = {
-    "mistral": ("https://console.mistral.ai/codestral/vibe", "Mistral AI Studio")
+    "devstral2": ("#", "Internal Server Admin")
 }
-CONFIG_DOCS_URL = (
-    "https://github.com/mistralai/mistral-vibe?tab=readme-ov-file#configuration"
-)
+CONFIG_DOCS_URL = "#"
 
 
 def _save_api_key_to_env_file(env_key: str, api_key: str) -> None:
@@ -57,10 +55,10 @@ class ApiKeyScreen(OnboardingScreen):
         )
 
     def _compose_config_docs(self) -> ComposeResult:
-        yield Static("[dim]Learn more about Vibe configuration:[/]")
+        yield Static("[dim]Learn more about Cora configuration:[/]")
         yield Horizontal(
             Static("→ ", classes="link-chevron"),
-            Link(CONFIG_DOCS_URL, url=CONFIG_DOCS_URL),
+            Link("Documentation", url=CONFIG_DOCS_URL),
             classes="link-row",
         )
 

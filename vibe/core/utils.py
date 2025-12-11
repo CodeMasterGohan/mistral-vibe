@@ -161,10 +161,7 @@ if CONFIG_FILE != GLOBAL_CONFIG_FILE and GLOBAL_CONFIG_FILE.is_file():
 
 
 def get_user_agent(backend: Backend) -> str:
-    user_agent = f"Mistral-Vibe/{__version__}"
-    if backend == Backend.MISTRAL:
-        mistral_sdk_prefix = "mistral-client-python/"
-        user_agent = f"{mistral_sdk_prefix}{user_agent}"
+    user_agent = f"Cora/{__version__}"
     return user_agent
 
 

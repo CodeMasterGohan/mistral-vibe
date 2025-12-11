@@ -90,7 +90,7 @@ async def test_ui_gets_through_the_onboarding_successfully(
 
     assert env_file.is_file()
     env_contents = env_file.read_text(encoding="utf-8")
-    assert "MISTRAL_API_KEY" in env_contents
+    assert "CORA_API_KEY" in env_contents
     assert api_key_value in env_contents
 
     assert config_updates.get("textual_theme") == app.theme
