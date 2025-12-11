@@ -42,15 +42,15 @@ def make_config(
 ) -> VibeConfig:
     models = [
         ModelConfig(
-            name="mistral-vibe-cli-latest",
-            provider="mistral",
+            name="devstral-2",
+            provider="devstral2",
             alias="devstral-latest",
             input_price=input_price,
             output_price=output_price,
         ),
         ModelConfig(
-            name="devstral-small-latest",
-            provider="mistral",
+            name="devstral-small",
+            provider="devstral2",
             alias="devstral-small",
             input_price=0.1,
             output_price=0.3,
@@ -65,16 +65,16 @@ def make_config(
     ]
     providers = [
         ProviderConfig(
-            name="mistral",
-            api_base="https://api.mistral.ai/v1",
-            api_key_env_var="MISTRAL_API_KEY",
-            backend=Backend.MISTRAL,
+            name="devstral2",
+            api_base="http://localhost:8000/v1",
+            api_key_env_var="CORA_API_KEY",
+            backend=Backend.GENERIC,
         ),
         ProviderConfig(
             name="lechat",
-            api_base="https://api.mistral.ai/v1",
+            api_base="http://localhost:8000/v1",
             api_key_env_var="LECHAT_API_KEY",
-            backend=Backend.MISTRAL,
+            backend=Backend.GENERIC,
         ),
     ]
     return VibeConfig(

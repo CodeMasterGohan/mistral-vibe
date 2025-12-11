@@ -23,7 +23,7 @@ from vibe.setup.onboarding import run_onboarding
 
 
 def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the Mistral Vibe interactive CLI")
+    parser = argparse.ArgumentParser(description="Run the Cora (402nd SWEG) interactive CLI")
     parser.add_argument(
         "initial_prompt",
         nargs="?",
@@ -154,7 +154,7 @@ def main() -> None:  # noqa: PLR0912, PLR0915
         if not HISTORY_FILE.exists():
             try:
                 HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
-                HISTORY_FILE.write_text("Hello Vibe!\n", "utf-8")
+                HISTORY_FILE.write_text("Hello Cora!\n", "utf-8")
             except Exception as e:
                 rprint(f"[yellow]Could not create history file: {e}[/]")
 
@@ -253,7 +253,7 @@ def main() -> None:  # noqa: PLR0912, PLR0915
             )
 
     except (KeyboardInterrupt, EOFError):
-        rprint("\n[dim]Bye![/]")
+        rprint("\n[dim]See you later![/]")
         sys.exit(0)
 
 

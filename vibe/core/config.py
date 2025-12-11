@@ -55,7 +55,7 @@ AGENT_DIR = CONFIG_DIR / "agents"
 PROMPT_DIR = CONFIG_DIR / "prompts"
 INSTRUCTIONS_FILE = CONFIG_DIR / "instructions.md"
 HISTORY_FILE = CONFIG_DIR / "vibehistory"
-PROJECT_DOC_FILENAMES = ["AGENTS.md", "VIBE.md", ".vibe.md"]
+PROJECT_DOC_FILENAMES = ["AGENTS.md", "CORA.md", ".cora.md"]
 
 
 class MissingAPIKeyError(RuntimeError):
@@ -76,16 +76,6 @@ class MissingPromptFileError(RuntimeError):
         )
         self.system_prompt_id = system_prompt_id
         self.prompt_dir = prompt_dir
-
-
-class WrongBackendError(RuntimeError):
-    def __init__(self, backend: Backend, is_mistral_api: bool) -> None:
-        super().__init__(
-            f"Wrong backend '{backend}' for {'' if is_mistral_api else 'non-'}"
-            f"mistral API. Use '{Backend.MISTRAL}' for mistral API and '{Backend.GENERIC}' for others."
-        )
-        self.backend = backend
-        self.is_mistral_api = is_mistral_api
 
 
 class TomlFileSettingsSource(PydanticBaseSettingsSource):
@@ -144,7 +134,6 @@ class SessionLoggingConfig(BaseSettings):
 
 
 class Backend(StrEnum):
-    MISTRAL = auto()
     GENERIC = auto()
 
 
@@ -257,10 +246,10 @@ class ModelConfig(BaseModel):
 
 DEFAULT_PROVIDERS = [
     ProviderConfig(
-        name="mistral",
-        api_base="https://api.mistral.ai/v1",
-        api_key_env_var="MISTRAL_API_KEY",
-        backend=Backend.MISTRAL,
+        name="devstral2",
+        api_base="http://localhost:8000/v1",
+        api_key_env_var="CORA_API_KEY",
+        backend=Backend.GENERIC,
     ),
     ProviderConfig(
         name="llamacpp",
@@ -271,18 +260,11 @@ DEFAULT_PROVIDERS = [
 
 DEFAULT_MODELS = [
     ModelConfig(
-        name="mistral-vibe-cli-latest",
-        provider="mistral",
+        name="devstral-2",
+        provider="devstral2",
         alias="devstral-2",
-        input_price=0.4,
-        output_price=2.0,
-    ),
-    ModelConfig(
-        name="devstral-small-latest",
-        provider="mistral",
-        alias="devstral-small",
-        input_price=0.1,
-        output_price=0.3,
+        input_price=0.0,
+        output_price=0.0,
     ),
     ModelConfig(
         name="devstral",
@@ -309,7 +291,7 @@ class VibeConfig(BaseSettings):
     include_model_info: bool = True
     include_project_context: bool = True
     include_prompt_detail: bool = True
-    enable_update_checks: bool = True
+    enable_update_checks: bool = False
     api_timeout: float = 720.0
     providers: list[ProviderConfig] = Field(
         default_factory=lambda: list(DEFAULT_PROVIDERS)
@@ -416,27 +398,6 @@ class VibeConfig(BaseSettings):
             api_key_env = provider.api_key_env_var
             if api_key_env and not os.getenv(api_key_env):
                 raise MissingAPIKeyError(api_key_env, provider.name)
-        except ValueError:
-            pass
-        return self
-
-    @model_validator(mode="after")
-    def _check_api_backend_compatibility(self) -> VibeConfig:
-        try:
-            active_model = self.get_active_model()
-            provider = self.get_provider_for_model(active_model)
-            MISTRAL_API_BASES = [
-                "https://codestral.mistral.ai",
-                "https://api.mistral.ai",
-            ]
-            is_mistral_api = any(
-                provider.api_base.startswith(api_base) for api_base in MISTRAL_API_BASES
-            )
-            if (is_mistral_api and provider.backend != Backend.MISTRAL) or (
-                not is_mistral_api and provider.backend != Backend.GENERIC
-            ):
-                raise WrongBackendError(provider.backend, is_mistral_api)
-
         except ValueError:
             pass
         return self

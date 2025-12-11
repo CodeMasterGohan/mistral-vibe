@@ -1,16 +1,15 @@
 [project]
 name = "mistral-vibe"
 version = "1.1.2"
-description = "Minimal CLI coding agent by Mistral"
+description = "Minimal CLI coding agent for 402nd SWEG"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "Apache-2.0" }
-authors = [{ name = "Mistral AI" }]
+authors = [{ name = "402nd SWEG" }]
 keywords = [
     "ai",
     "cli",
     "coding-assistant",
-    "mistral",
     "llm",
     "developer-tools",
 ]
@@ -31,7 +30,6 @@ dependencies = [
     "aiofiles>=24.1.0",
     "httpx>=0.28.1",
     "mcp>=1.14.0",
-    "mistralai==1.9.11",
     "pexpect>=4.9.0",
     "packaging>=24.1",
     "pydantic>=2.12.4",
@@ -64,8 +62,8 @@ include = ["vibe/"]
 
 
 [project.scripts]
-vibe = "vibe.cli.entrypoint:main"
-vibe-acp = "vibe.acp.entrypoint:main"
+cora = "vibe.cli.entrypoint:main"
+cora-acp = "vibe.acp.entrypoint:main"
 
 
 [tool.uv]

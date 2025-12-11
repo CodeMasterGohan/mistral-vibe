@@ -34,15 +34,15 @@ def acp_agent(backend: FakeBackend) -> VibeAcpAgent:
         active_model="devstral-latest",
         models=[
             ModelConfig(
-                name="devstral-latest",
-                provider="mistral",
+                name="devstral-2",
+                provider="devstral2",
                 alias="devstral-latest",
                 input_price=0.4,
                 output_price=2.0,
             ),
             ModelConfig(
                 name="devstral-small",
-                provider="mistral",
+                provider="devstral2",
                 alias="devstral-small",
                 input_price=0.1,
                 output_price=0.3,
